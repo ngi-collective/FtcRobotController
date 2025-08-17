@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.Flywheel.flywheel;
+import static org.firstinspires.ftc.teamcode.Flywheel.flywheelsetup;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple; // For motor direction
-import com.qualcomm.robotcore.util.Range; // Useful for clipping values if needed, though normalization handles it
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp(name = "Mecanum Proportional Control")
 public class MecanumMovement extends LinearOpMode {
@@ -44,9 +46,8 @@ public class MecanumMovement extends LinearOpMode {
         telemetry.addData(">", "Movement: Triggers (Fwd/Rev), Left Stick X (Strafe), Right Stick X (Rotate)");
         telemetry.addData(">", "Logitech F310: Ensure LED is ON for X-Input mode.");
         telemetry.update();
-
+        flywheelsetup();
         waitForStart();
-
         if (opModeIsActive()) {
             while (opModeIsActive()) {
                 // --- Read Gamepad Inputs ---
@@ -78,7 +79,13 @@ public class MecanumMovement extends LinearOpMode {
                 double backLeftPower = (ySpeed - xSpeed + rotationSpeed) / denominator;
                 double frontRightPower = (ySpeed - xSpeed - rotationSpeed) / denominator;
                 double backRightPower = (ySpeed + xSpeed - rotationSpeed) / denominator;
-
+                while (gamepad1.aWasPressed()) {
+                    Intake.start();
+                }
+                Intake.stop();
+                while (gamepad1.rightBumperWasPressed()) {
+                    flywheel.setPower(gamepad1.right_trigger);
+                }
                 // --- Set Motor Powers ---
                 FL.setPower(frontLeftPower);
                 BL.setPower(backLeftPower);
