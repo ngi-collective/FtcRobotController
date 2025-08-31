@@ -17,10 +17,10 @@ public class MecanumMovement extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize motors from hardware map
-        FL = hardwareMap.get(DcMotor.class, "FL");
-        FR = hardwareMap.get(DcMotor.class, "FR");
-        BL = hardwareMap.get(DcMotor.class, "BL");
-        BR = hardwareMap.get(DcMotor.class, "BR");
+        FL = hardwareMap.get(DcMotor.class, "leftFront");
+        FR = hardwareMap.get(DcMotor.class, "rightFront");
+        BL = hardwareMap.get(DcMotor.class, "leftBack");
+        BR = hardwareMap.get(DcMotor.class, "rightBack");
 
         // Set motor directions:
         // Adjust these if your robot moves incorrectly.

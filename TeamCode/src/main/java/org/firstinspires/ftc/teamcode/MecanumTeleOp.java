@@ -33,9 +33,9 @@ public class MecanumTeleOp extends LinearOpMode {
         // Initialize the hardware variables. The strings here must match the names assigned
         // during the robot configuration on the Control Hub.
         frontLeftMotor = hardwareMap.get(DcMotor.class, "leftFront");
-        backLeftMotor = hardwareMap.get(DcMotor.class, "leftRear");
+        backLeftMotor = hardwareMap.get(DcMotor.class, "leftBack");
         frontRightMotor = hardwareMap.get(DcMotor.class, "rightFront");
-        backRightMotor = hardwareMap.get(DcMotor.class, "rightRear");
+        backRightMotor = hardwareMap.get(DcMotor.class, "rightBack");
 
         // Set motor directions. This is crucial for mecanum drive.
         // Directions depend on how motors are physically mounted and which way wheels spin.
