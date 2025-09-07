@@ -3,8 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple; // For motor direction
-import com.qualcomm.robotcore.util.Range; // Useful for clipping values if needed, though normalization handles it
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp(name = "Mecanum Proportional Control")
 public class MecanumMovement extends LinearOpMode {
@@ -59,7 +58,7 @@ public class MecanumMovement extends LinearOpMode {
                 // Strafing from Left Joystick X-axis
                 // Left stick X is -1.0 (left) to 1.0 (right).
                 // Set to negative because left and right was swapped.
-                double xSpeed = -gamepad1.left_stick_x;
+                double xSpeed = gamepad1.left_stick_x;
 
                 // Rotation from Right Joystick X-axis
                 // Right stick X is -1.0 (left/counter-clockwise) to 1.0 (right/clockwise).
