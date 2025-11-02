@@ -54,7 +54,6 @@ public class AprilTagPatternAuto extends LinearOpMode {
     private final Pose GPPPose = new Pose(100, 35.5, Math.toRadians(0)); // Lowest (Third Set) of Artifacts from the Spike Mark.
 
     // Initialize variables for paths
-
     private PathChain grabPPG;
     private PathChain scorePPG;
     private PathChain grabPGP;
