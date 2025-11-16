@@ -27,16 +27,16 @@ public class MecanumMovement extends LinearOpMode {
         // when driving forward/backward.
         // Typically, if you have motors on the left and right, one side is reversed.
         // Example: If motors are oriented the same way on both sides.
-        FL.setDirection(DcMotorSimple.Direction.REVERSE); // Or FORWARD, depends on mounting
-        BL.setDirection(DcMotorSimple.Direction.REVERSE); // Or FORWARD
-        FR.setDirection(DcMotorSimple.Direction.FORWARD); // Or REVERSE
-        BR.setDirection(DcMotorSimple.Direction.FORWARD); // Or REVERSE
+        FL.setDirection(DcMotorSimple.Direction.FORWARD);
+        BL.setDirection(DcMotorSimple.Direction.FORWARD); // Often reversed for proper strafing
+        FR.setDirection(DcMotorSimple.Direction.REVERSE); // Often reversed for proper strafing
+        BR.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set zero power behavior - BRAKE helps prevent coasting and makes control more precise
-        FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         telemetry.addData("Status", "Initialized");
         telemetry.addData(">", "Press Start to begin");
@@ -46,7 +46,6 @@ public class MecanumMovement extends LinearOpMode {
 
         waitForStart();
 
-        if (opModeIsActive()) {
             while (opModeIsActive()) {
                 // --- Read Gamepad Inputs ---
                 // Forward/Backward from triggers
@@ -58,12 +57,12 @@ public class MecanumMovement extends LinearOpMode {
                 // Strafing from Left Joystick X-axis
                 // Left stick X is -1.0 (left) to 1.0 (right).
                 // Set to negative because left and right was swapped.
-                double xSpeed = gamepad1.left_stick_x;
+                double xSpeed = -gamepad1.left_stick_x;
 
                 // Rotation from Right Joystick X-axis
                 // Right stick X is -1.0 (left/counter-clockwise) to 1.0 (right/clockwise).
                 // Set to negative because left and right was swapped.
-                double rotationSpeed = -gamepad1.right_stick_x;
+                double rotationSpeed = gamepad1.right_stick_x;
 
                 // --- Mecanum Drive Kinematics ---
                 // These formulas allow for combining ySpeed, xSpeed, and rotationSpeed.
@@ -97,7 +96,6 @@ public class MecanumMovement extends LinearOpMode {
                 telemetry.addData("BR Power", "%.2f", BR.getPower());
                 telemetry.update();
             }
-        }
 
         // Stop all motors once the OpMode is no longer active
         FL.setPower(0);
