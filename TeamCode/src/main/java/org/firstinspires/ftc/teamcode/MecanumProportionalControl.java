@@ -67,7 +67,7 @@ public class MecanumProportionalControl extends LinearOpMode {
                 // Rotation from Right Joystick X-axis
                 // Right stick X is -1.0 (left/counter-clockwise) to 1.0 (right/clockwise).
                 // Set to negative because left and right was swapped.
-                double rotationSpeed = gamepad1.right_stick_x;
+                double rotationSpeed = -gamepad1.right_stick_x;
 
                 // --- Mecanum Drive Kinematics ---
                 // These formulas allow for combining ySpeed, xSpeed, and rotationSpeed.
