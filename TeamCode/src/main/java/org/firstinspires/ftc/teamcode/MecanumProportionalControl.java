@@ -51,7 +51,6 @@ public class MecanumProportionalControl extends LinearOpMode {
         waitForStart();
 
             while (opModeIsActive()) {
-
                 // --- Read Gamepad Inputs ---
                 // Forward/Backward from triggers
                 double backwardPower = gamepad1.left_trigger; // 0.0 to 1.0
