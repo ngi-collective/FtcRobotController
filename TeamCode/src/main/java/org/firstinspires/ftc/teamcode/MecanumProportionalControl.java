@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.Arrays;
@@ -13,8 +14,10 @@ public class MecanumProportionalControl extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize motors from hardware map
-        //intake = hardwareMap.get(DcMotor.class, "Flywheel");
+        //intake = hardwareMap.get(DcMotor.class, "Intake");
         //private DcMotor intake;
+        DcMotorEx Flywheel1 = hardwareMap.get(DcMotorEx.class, "Flywheel1");
+        DcMotorEx Flywheel2 = hardwareMap.get(DcMotorEx.class, "Flywheel2");
         // Front Left
         DcMotor FL = hardwareMap.get(DcMotor.class, "FL");
         // Front Right
@@ -23,7 +26,7 @@ public class MecanumProportionalControl extends LinearOpMode {
         DcMotor BL = hardwareMap.get(DcMotor.class, "BL");
         // Back Right
         DcMotor BR = hardwareMap.get(DcMotor.class, "BR");
-
+        //DcMotor flywheel = hardwareMap.get(DcMotor.class, "Flywheel");
         // Set motor directions:
         // Adjust these if your robot moves incorrectly.
         // One side of the robot needs to be reversed for mecanum wheels to work correctly
@@ -37,6 +40,9 @@ public class MecanumProportionalControl extends LinearOpMode {
         for (DcMotor dcMotor : Arrays.asList(FL, FR, BL, BR)) {
             dcMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+        Flywheel1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Flywheel2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Flywheel2.setDirection(DcMotorSimple.Direction.REVERSE);
         // Set zero power behavior - FLOAT helps prevent coasting and makes control more precise
         for (DcMotor dcMotor : Arrays.asList(FL, FR, BL, BR)) {
             dcMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -87,9 +93,11 @@ public class MecanumProportionalControl extends LinearOpMode {
                 FR.setPower(frontRightPower);
                 BR.setPower(backRightPower);
                 while (gamepad1.right_bumper){
-                    //intake.setPower(gamepad1.right_trigger);
+                    Flywheel1.setVelocity(gamepad1.right_trigger*5800);
+                    Flywheel2.setVelocity(gamepad1.right_trigger*5800);
                 }
-                //intake.setPower(0);
+                Flywheel1.setVelocity(0);
+                Flywheel2.setVelocity(0);
 
 
                 // --- Telemetry ---
@@ -108,6 +116,7 @@ public class MecanumProportionalControl extends LinearOpMode {
                 telemetry.addData("FR Power", "%.2f", FR.getPower());
                 telemetry.addData("BL Power", "%.2f", BL.getPower());
                 telemetry.addData("BR Power", "%.2f", BR.getPower());
+                telemetry.addData("Flywheel RPM",Flywheel1.getVelocity());
                 telemetry.update();
             }
         // Stop all motors once the OpMode is no longer active
