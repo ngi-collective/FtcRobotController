@@ -11,4 +11,7 @@ public class HoodControl {
         hood = hardwareMap.get(Servo.class, "Hood");
         hood.setPosition(0);
     }
+
+    public static class PassiveFullCourt {
+    }
 }
