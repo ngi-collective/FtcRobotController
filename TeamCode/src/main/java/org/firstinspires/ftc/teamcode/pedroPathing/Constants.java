@@ -31,12 +31,12 @@ public class Constants {
             .leftFrontEncoderDirection(Encoder.REVERSE)
             .leftRearEncoderDirection(Encoder.REVERSE)
             .rightFrontEncoderDirection(Encoder.FORWARD)
-            .rightRearEncoderDirection(Encoder.REVERSE)
+            .rightRearEncoderDirection(Encoder.FORWARD)
             .robotWidth(18)
             .robotLength(17)
-            .strafeTicksToInches(0.70)
-            .turnTicksToInches(0.8)
-            .forwardTicksToInches(0.0006);
+            .strafeTicksToInches(0)
+            .turnTicksToInches(0)
+            .forwardTicksToInches(0.4642057861318711);
 
 
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);

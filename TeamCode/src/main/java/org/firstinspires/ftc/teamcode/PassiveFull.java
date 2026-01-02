@@ -46,7 +46,14 @@ public class PassiveFull extends OpMode {
 
                 if(pathTimer.getElapsedTimeSeconds() > 27) {
                     follower.followPath(leaveLaunch,true);
-                }            }
+                }
+            case 2:
+                if(pathTimer.getElapsedTimeSeconds() >= 30) {
+                    /* Set the state to a Case we won't use or define, so it just stops running an new paths */
+                    setPathState(-1);
+                }
+                break;
+            }
         }
     /** These change the states of the paths and actions. It will also reset the timers of the individual switches **/
     public void setPathState(int pState) {

@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 import java.util.Arrays;
 
@@ -17,16 +19,16 @@ public class MecanumProportionalControl extends LinearOpMode {
         // Initialize motors from hardware map
         //intake = hardwareMap.get(DcMotor.class, "Intake");
         //private DcMotor intake;
-        DcMotorEx Flywheel1 = hardwareMap.get(DcMotorEx.class, "Flywheel1");
-        DcMotorEx Flywheel2 = hardwareMap.get(DcMotorEx.class, "Flywheel2");
+        DcMotorEx flywheel = hardwareMap.get(DcMotorEx.class, "Flywheel1");
         // Front Left
-        DcMotor FL = hardwareMap.get(DcMotor.class, "FL");
+        DcMotorEx FL = hardwareMap.get(DcMotorEx.class, "FL");
         // Front Right
-        DcMotor FR = hardwareMap.get(DcMotor.class, "FR");
+        DcMotorEx FR = hardwareMap.get(DcMotorEx.class, "FR");
         // Back Left
-        DcMotor BL = hardwareMap.get(DcMotor.class, "BL");
+        DcMotorEx BL = hardwareMap.get(DcMotorEx.class, "BL");
         // Back Right
-        DcMotor BR = hardwareMap.get(DcMotor.class, "BR");
+        DcMotorEx BR = hardwareMap.get(DcMotorEx.class, "BR");
+        Object Camera = hardwareMap.get(CameraName.class, "Camera");
         //DcMotor flywheel = hardwareMap.get(DcMotor.class, "Flywheel");
         // Set motor directions:
         // Adjust these if your robot moves incorrectly.
@@ -38,12 +40,11 @@ public class MecanumProportionalControl extends LinearOpMode {
         BL.setDirection(DcMotorSimple.Direction.REVERSE); // Or FORWARD
         FR.setDirection(DcMotorSimple.Direction.FORWARD); // Or REVERSE
         BR.setDirection(DcMotorSimple.Direction.FORWARD); // Or REVERSE
+
         for (DcMotor dcMotor : Arrays.asList(FL, FR, BL, BR)) {
             dcMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-        Flywheel1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Flywheel2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Flywheel2.setDirection(DcMotorSimple.Direction.REVERSE);
+        flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Set zero power behavior - FLOAT helps prevent coasting and makes control more precise
         for (DcMotor dcMotor : Arrays.asList(FL, FR, BL, BR)) {
             dcMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -94,15 +95,13 @@ public class MecanumProportionalControl extends LinearOpMode {
                 FR.setPower(frontRightPower);
                 BR.setPower(backRightPower);
                 while (gamepad1.right_bumper){
-                    Flywheel1.setVelocity(gamepad1.right_trigger*5800);
-                    Flywheel2.setVelocity(gamepad1.right_trigger*5800);
+                    flywheel.setVelocity(gamepad1.right_trigger*5800);
                 }
-                Flywheel1.setVelocity(0);
-                Flywheel2.setVelocity(0);
-
-
+                flywheel.setVelocity(0);
+                aprilTagAutoAim.shootAtAprilTag(20, (WebcamName) Camera,flywheel);
                 // --- Telemetry ---
                 //telemetry.addData("Intake Power", intake.getPower());
+                telemetry.addData("FL Encoders", FL.getCurrentPosition());
                 telemetry.addData("FL Encoders", FL.getCurrentPosition());
                 telemetry.addData("FR Encoders", FR.getCurrentPosition());
                 telemetry.addData("BL Encoders", BL.getCurrentPosition());
@@ -113,11 +112,11 @@ public class MecanumProportionalControl extends LinearOpMode {
                 telemetry.addData("XSpeed (Strafe LX)", "%.2f", xSpeed);
                 telemetry.addData("Rotation (Rotate RX)", "%.2f", rotationSpeed);
                 telemetry.addData("Denominator", "%.2f", denominator);
-                telemetry.addData("FL Power", "%.2f", FL.getPower());
-                telemetry.addData("FR Power", "%.2f", FR.getPower());
-                telemetry.addData("BL Power", "%.2f", BL.getPower());
-                telemetry.addData("BR Power", "%.2f", BR.getPower());
-                telemetry.addData("Flywheel RPM",Flywheel1.getVelocity());
+                telemetry.addData("FL Velocity", "%.2f", FL.getVelocity());
+                telemetry.addData("FR Velocity", "%.2f", FR.getVelocity());
+                telemetry.addData("BL Velocity", "%.2f", BL.getVelocity());
+                telemetry.addData("BR Velocity", "%.2f", BR.getVelocity());
+                telemetry.addData("Flywheel RPM",flywheel.getVelocity());
                 telemetry.update();
             }
         // Stop all motors once the OpMode is no longer active
@@ -127,11 +126,5 @@ public class MecanumProportionalControl extends LinearOpMode {
         BR.setPower(0);
         }
 
-    @Autonomous
-    public static class PassiveHalfCourt extends LinearOpMode {
-        @Override
-        public void runOpMode() throws InterruptedException {
 
         }
-    }
-}
