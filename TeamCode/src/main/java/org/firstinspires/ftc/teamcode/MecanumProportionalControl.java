@@ -6,9 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-
 import java.util.Arrays;
 
 @TeleOp(name = "Mecanum Proportional Control")
@@ -17,9 +14,10 @@ public class MecanumProportionalControl extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize motors from hardware map
-        //intake = hardwareMap.get(DcMotor.class, "Intake");
-        //private DcMotor intake;
-        DcMotorEx flywheel = hardwareMap.get(DcMotorEx.class, "Flywheel1");
+        DcMotorEx flywheel = hardwareMap.get(DcMotorEx.class, "Flywheel");
+
+        DcMotorEx intake = hardwareMap.get(DcMotorEx.class, "Intake");
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
         // Front Left
         DcMotorEx FL = hardwareMap.get(DcMotorEx.class, "FL");
         // Front Right
@@ -28,7 +26,8 @@ public class MecanumProportionalControl extends LinearOpMode {
         DcMotorEx BL = hardwareMap.get(DcMotorEx.class, "BL");
         // Back Right
         DcMotorEx BR = hardwareMap.get(DcMotorEx.class, "BR");
-        Object Camera = hardwareMap.get(CameraName.class, "Camera");
+
+        //Object Camera = hardwareMap.get(CameraName.class, "Camera");
         //DcMotor flywheel = hardwareMap.get(DcMotor.class, "Flywheel");
         // Set motor directions:
         // Adjust these if your robot moves incorrectly.
@@ -45,6 +44,7 @@ public class MecanumProportionalControl extends LinearOpMode {
             dcMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Set zero power behavior - FLOAT helps prevent coasting and makes control more precise
         for (DcMotor dcMotor : Arrays.asList(FL, FR, BL, BR)) {
             dcMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -96,9 +96,16 @@ public class MecanumProportionalControl extends LinearOpMode {
                 BR.setPower(backRightPower);
                 while (gamepad1.right_bumper){
                     flywheel.setVelocity(gamepad1.right_trigger*5800);
+                    while (gamepad1.left_bumper){
+                        intake.setVelocity(gamepad1.left_trigger*2900);
+                    }
                 }
+                while (gamepad1.left_bumper){
+                    intake.setVelocity(gamepad1.left_trigger*2900);
+                    while (gamepad1.right_bumper){
+                        flywheel.setVelocity(gamepad1.right_trigger*5800);
+                }}
                 flywheel.setVelocity(0);
-                aprilTagAutoAim.shootAtAprilTag(20, (WebcamName) Camera,flywheel);
                 // --- Telemetry ---
                 //telemetry.addData("Intake Power", intake.getPower());
                 telemetry.addData("FL Encoders", FL.getCurrentPosition());

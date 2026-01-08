@@ -16,18 +16,23 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 @Autonomous(name = "Example Auto", group = "Examples")
 public class ActiveFullBlue extends OpMode {
     public DcMotorEx flywheel = hardwareMap.get(DcMotorEx.class,"flywheel");
+
+    public DcMotorEx intake = hardwareMap.get(DcMotorEx.class,"intake");
     public WebcamName Camera = hardwareMap.get(WebcamName.class,"Camera");
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
 
     private int pathState;
-    private final Pose startPose = new Pose(71.479, 8.488, Math.toRadians(90)); // Start Pose of our robot.
+    private final Pose startPose = new Pose(54, 9, Math.toRadians(90)); // Start Pose of our robot.
     private final Pose scorePose = new Pose(60, 85, Math.toRadians(135)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-    private final Pose pickup3Pose = new Pose(37, 121, Math.toRadians(0)); // Highest (First Set) of Artifacts from the Spike Mark.
-    private final Pose pickup2Pose = new Pose(43, 130, Math.toRadians(0)); // Middle (Second Set) of Artifacts from the Spike Mark.
-    private final Pose pickup1Pose = new Pose(49, 135, Math.toRadians(0)); // Lowest (Third Set) of Artifacts from the Spike Mark.
+    private final Pose pickupStart3Pose = new Pose(42, 36, Math.toRadians(0)); // Highest (First Set) of Artifacts from the Spike Mark.
+    private final Pose pickupEnd3Pose = new Pose(17, 36, Math.toRadians(0)); // Highest (First Set) of Artifacts from the Spike Mark.
+    private final Pose pickup2StartPose = new Pose(42, 60, Math.toRadians(0)); // Middle (Second Set) of Artifacts from the Spike Mark.
+    private final Pose pickup2EndPose = new Pose(17, 60, Math.toRadians(0)); // Middle (Second Set) of Artifacts from the Spike Mark.
+    private final Pose pickup1StartPose = new Pose(42, 84, Math.toRadians(180)); // Lowest (Third Set) of Artifacts from the Spike Mark.
+    private final Pose pickup1EndPose = new Pose(17, 84, Math.toRadians(180)); // Lowest (Third Set) of Artifacts from the Spike Mark.
     private Path scorePreload;
-    private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;
+    private PathChain grabPickup1, gotoPickup1, scorePickup1, grabPickup2, gotoPickup2, scorePickup2, grabPickup3, gotoPickup3, scorePickup3;
 
     public void buildPaths() {
         /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
@@ -39,42 +44,55 @@ public class ActiveFullBlue extends OpMode {
 
         /* This is our grabPickup1 PathChain. We are using a single path with a BezierLine, which is a straight line. */
         grabPickup1 = follower.pathBuilder()
-                .addPath(new BezierLine(scorePose, pickup1Pose))
-                .setLinearHeadingInterpolation(scorePose.getHeading(), pickup1Pose.getHeading())
+                .addPath(new BezierLine(pickup1StartPose, pickup1EndPose))
+                .setLinearHeadingInterpolation(scorePose.getHeading(), pickup1StartPose.getHeading())
+                .build();
+        gotoPickup1 = follower.pathBuilder()
+                .addPath(new BezierLine(scorePose, pickup1StartPose))
+                .setLinearHeadingInterpolation(scorePose.getHeading(), pickup1StartPose.getHeading())
                 .build();
 
         /* This is our scorePickup1 PathChain. We are using a single path with a BezierLine, which is a straight line. */
         scorePickup1 = follower.pathBuilder()
-                .addPath(new BezierLine(pickup1Pose, scorePose))
-                .setLinearHeadingInterpolation(pickup1Pose.getHeading(), scorePose.getHeading())
+                .addPath(new BezierLine(pickup1StartPose, scorePose))
+                .setLinearHeadingInterpolation(pickup1StartPose.getHeading(), scorePose.getHeading())
                 .build();
 
         /* This is our grabPickup2 PathChain. We are using a single path with a BezierLine, which is a straight line. */
         grabPickup2 = follower.pathBuilder()
-                .addPath(new BezierLine(scorePose, pickup2Pose))
-                .setLinearHeadingInterpolation(scorePose.getHeading(), pickup2Pose.getHeading())
+                .addPath(new BezierLine(pickup2StartPose,pickup2EndPose))
+                .setLinearHeadingInterpolation(scorePose.getHeading(), pickup2StartPose.getHeading())
+                .build();
+        gotoPickup2 = follower.pathBuilder()
+                .addPath(new BezierLine(scorePose, pickup2StartPose))
+                .setLinearHeadingInterpolation(scorePose.getHeading(), pickup2StartPose.getHeading())
                 .build();
 
         /* This is our scorePickup2 PathChain. We are using a single path with a BezierLine, which is a straight line. */
         scorePickup2 = follower.pathBuilder()
-                .addPath(new BezierLine(pickup2Pose, scorePose))
-                .setLinearHeadingInterpolation(pickup2Pose.getHeading(), scorePose.getHeading())
+                .addPath(new BezierLine(pickup2StartPose, scorePose))
+                .setLinearHeadingInterpolation(pickup2StartPose.getHeading(), scorePose.getHeading())
                 .build();
 
         /* This is our grabPickup3 PathChain. We are using a single path with a BezierLine, which is a straight line. */
         grabPickup3 = follower.pathBuilder()
-                .addPath(new BezierLine(scorePose, pickup3Pose))
-                .setLinearHeadingInterpolation(scorePose.getHeading(), pickup3Pose.getHeading())
+                .addPath(new BezierLine(pickupStart3Pose,pickupEnd3Pose))
+                .setLinearHeadingInterpolation(scorePose.getHeading(), pickupStart3Pose.getHeading())
+                .build();
+        gotoPickup3 = follower.pathBuilder()
+                .addPath(new BezierLine(scorePose, pickupStart3Pose))
+                .setLinearHeadingInterpolation(scorePose.getHeading(), pickupStart3Pose.getHeading())
                 .build();
 
         /* This is our scorePickup3 PathChain. We are using a single path with a BezierLine, which is a straight line. */
         scorePickup3 = follower.pathBuilder()
-                .addPath(new BezierLine(pickup3Pose, scorePose))
-                .setLinearHeadingInterpolation(pickup3Pose.getHeading(), scorePose.getHeading())
+                .addPath(new BezierLine(pickupStart3Pose, scorePose))
+                .setLinearHeadingInterpolation(pickupStart3Pose.getHeading(), scorePose.getHeading())
                 .build();
     }public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
+                /* Score Preload */
                 follower.followPath(scorePreload);
                 aprilTagAutoAim.shootAtAprilTag(20,Camera,flywheel);
                 setPathState(1);
@@ -89,21 +107,21 @@ public class ActiveFullBlue extends OpMode {
 
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
-                    /* Score Preload */
 
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(grabPickup1,true);
+                    follower.followPath(gotoPickup3);
                     setPathState(2);
                 }
                 break;
             case 2:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup1Pose's position */
+                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup1StartPose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
 
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(scorePickup1,true);
-                    aprilTagAutoAim.shootAtAprilTag(20,Camera,flywheel);
+                    intake.setVelocity(500);
+                    follower.followPath(grabPickup3);
+                    intake.setVelocity(0);
                     setPathState(3);
                 }
                 break;
@@ -113,18 +131,18 @@ public class ActiveFullBlue extends OpMode {
                     /* Score Sample */
 
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(grabPickup2,true);
+                    follower.followPath(scorePickup3,true);
+                    aprilTagAutoAim.shootAtAprilTag(20,Camera,flywheel);
                     setPathState(4);
                 }
                 break;
             case 4:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup2Pose's position */
+                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup2StartPose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
 
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(scorePickup2,true);
-                    aprilTagAutoAim.shootAtAprilTag(20,Camera,flywheel);
+                    follower.followPath(gotoPickup2);
                     setPathState(5);
                 }
                 break;
@@ -134,7 +152,9 @@ public class ActiveFullBlue extends OpMode {
                     /* Score Sample */
 
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(grabPickup3,true);
+                    intake.setVelocity(500);
+                    follower.followPath(grabPickup2);
+                    intake.setVelocity(0);
                     setPathState(6);
                 }
                 break;
@@ -144,7 +164,7 @@ public class ActiveFullBlue extends OpMode {
                     /* Grab Sample */
 
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(scorePickup3, true);
+                    follower.followPath(scorePickup2, true);
                     aprilTagAutoAim.shootAtAprilTag(20,Camera,flywheel);
                     setPathState(7);
                 }
@@ -153,8 +173,28 @@ public class ActiveFullBlue extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
                 /* Set the state to a Case we won't use or define, so it just stops running an new paths */
-                setPathState(-1);
+                    follower.followPath(gotoPickup1);
+                    setPathState(8);
             }
+                break;
+            case 8:
+        /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
+                if(!follower.isBusy()) {
+            /* Set the state to a Case we won't use or define, so it just stops running an new paths */
+                    intake.setVelocity(500);
+                    follower.followPath(grabPickup1);
+                    intake.setVelocity(0);
+                    setPathState(9);
+        }
+                break;
+            case 9:
+                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
+                if(!follower.isBusy()) {
+                    /* Set the state to a Case we won't use or define, so it just stops running an new paths */
+                    follower.followPath(scorePickup1,true);
+                    aprilTagAutoAim.shootAtAprilTag(20,Camera,flywheel);
+                    setPathState(-1);
+                }
                 break;
         }
     }
@@ -213,8 +253,3 @@ public class ActiveFullBlue extends OpMode {
     public void stop() {}
 
 }
-
-
-
-
-

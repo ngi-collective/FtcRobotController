@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @Autonomous(name = "Example Auto", group = "Examples")
-public class PassiveFull extends OpMode {
+public class PassiveHalfBlue extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -20,21 +20,22 @@ public class PassiveFull extends OpMode {
     private int pathState;
     private final Pose startPose = new Pose(28.5, 128, Math.toRadians(180)); // Start Pose of our robot.
     private final Pose scorePose = new Pose(60, 85, Math.toRadians(135)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-    private final Pose pickup1Pose = new Pose(37, 121, Math.toRadians(0)); // Highest (First Set) of Artifacts from the Spike Mark.
-    private final Pose pickup2Pose = new Pose(43, 130, Math.toRadians(0)); // Middle (Second Set) of Artifacts from the Spike Mark.
-    private final Pose pickup3Pose = new Pose(49, 135, Math.toRadians(0)); // Lowest (Third Set) of Artifacts from the Spike Mark.
     private Path scorePreload;
     private PathChain holdStart, leaveLaunch;
 
     public void buildPaths() {
         holdStart = follower.pathBuilder()
-                .addPath(new BezierLine(new Pose(72.521, 9.233), new Pose(72.670, 9.382)))
-                .setConstantHeadingInterpolation(Math.toRadians(90))
+                .addPath(
+                        new BezierLine(new Pose(34.697, 134.767), new Pose(34.697, 134.469))
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
                 .build();
 
         leaveLaunch = follower.pathBuilder()
-                .addPath(new BezierLine(new Pose(72.670, 9.382), new Pose(60.012, 44.674)))
-                .setConstantHeadingInterpolation(Math.toRadians(90))
+                .addPath(
+                        new BezierLine(new Pose(34.697, 134.469), new Pose(19.954, 101.113))
+                )
+                .setConstantHeadingInterpolation(Math.toRadians(270))
                 .build();
     }public void autonomousPathUpdate() {
         switch (pathState) {
