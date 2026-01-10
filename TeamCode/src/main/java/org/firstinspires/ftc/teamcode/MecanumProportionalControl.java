@@ -82,7 +82,7 @@ public class MecanumProportionalControl extends LinearOpMode {
             // Right stick X is -1.0 (left/counter-clockwise) to 1.0 (right/clockwise).
             // Set to negative because left and right was swapped.
             double twist = (gamepad1.right_stick_x);
-            twist *= 1.5;
+            twist *= 2.0;
 
             // --- Mecanum Drive Kinematics ---
             // These formulas allow for combining ySpeed, xSpeed, and rotationSpeed.
@@ -126,69 +126,70 @@ public class MecanumProportionalControl extends LinearOpMode {
                 intake.setVelocity(-50);
                 telemetry.update();
             }*/
-            intake.setVelocity(600*gamepad2.left_trigger);
+            intake.setVelocity(600 * gamepad2.left_trigger);
 
             //FLYWHEEL SPEEDS Definition
-            if (gamepad2.yWasPressed()){
-                if (OuttakeSpeed == OTNULL){
+            if (gamepad2.yWasPressed()) {
+                if (OuttakeSpeed == OTNULL) {
                     OuttakeSpeed = OTCLOSEUP;
                     telemetry.update();
-                } else if (OuttakeSpeed == OTCLOSEUP){
+                } else if (OuttakeSpeed == OTCLOSEUP) {
                     OuttakeSpeed = OTFARBACK;
                     telemetry.update();
-                } else if (OuttakeSpeed == OTFARBACK){
+                } else if (OuttakeSpeed == OTFARBACK) {
                     OuttakeSpeed = OTNULL;
                     telemetry.update();
                 }
 
-            //flywheel.setVelocity(OuttakeSpeed);
-            flywheel.setVelocity(6000*gamepad2.right_trigger);
+                //flywheel.setVelocity(OuttakeSpeed);
+                flywheel.setVelocity(6000 * gamepad2.right_trigger);
 
-            //if (gamepad2.left_bumper!=0) {
-              //  flywheel.setVelocity(-50);
-            //}
+                //if (gamepad2.left_bumper!=0) {
+                //  flywheel.setVelocity(-50);
+                //}
 
-            // --          Flywheel Speed AprilTag           --
-            //if (gamepad1.right_bumper) {
-            //    aprilTagAutoAim.shootAtAprilTag(targetid,Camera,flywheel);
-            //}
-            //while (gamepad1.right_bumper){
-            //  flywheel.setVelocity(gamepad1.right_trigger*5800);
-            // while (gamepad1.left_bumper){
-            //    intake.setVelocity(gamepad1.left_trigger*2900);
-            //    }
-            //}
-            //while (gamepad1.left_bumper){
-            //   intake.setVelocity(gamepad1.left_trigger*2900);
-            //    while (gamepad1.right_bumper){
-            //       flywheel.setVelocity(gamepad1.right_trigger*5800);
-            //}}
-            //flywheel.setVelocity(0);
-            // --- Telemetry ---
-            //telemetry.addData("Intake Power", intake.getPower());
-            telemetry.addData("FR Encoders", FR.getCurrentPosition());
-            telemetry.addData("BL Encoders", BL.getCurrentPosition());
-            telemetry.addData("BR Encoders", BR.getCurrentPosition());
-            telemetry.addData("FL Encoders", FL.getCurrentPosition());
-            telemetry.addData("Forward Trigger", "%.2f", forwardPower);
-            telemetry.addData("Backward Trigger", "%.2f", backwardPower);
-            telemetry.addData("YSpeed (Fwd/Rev)", "%.2f", drive);
-            telemetry.addData("XSpeed (Strafe LX)", "%.2f", strafe);
-            telemetry.addData("Rotation (Rotate RX)", "%.2f", twist);
-            telemetry.addData("Denominator", "%.2f", denominator);
-            telemetry.addData("FR Velocity", "%.2f", FR.getVelocity());
-            telemetry.addData("BL Velocity", "%.2f", BL.getVelocity());
-            telemetry.addData("BR Velocity", "%.2f", BR.getVelocity());
-            telemetry.addData("FL Velocity", "%.2f", FL.getVelocity());
-            telemetry.addData("Flywheel RPM", flywheel.getVelocity());
-            telemetry.addData("Flywheel Power", flywheel.getPower());
-            telemetry.addData("Intake Power", intake.getPower());
-            telemetry.update();
+                // --          Flywheel Speed AprilTag           --
+                //if (gamepad1.right_bumper) {
+                //    aprilTagAutoAim.shootAtAprilTag(targetid,Camera,flywheel);
+                //}
+                //while (gamepad1.right_bumper){
+                //  flywheel.setVelocity(gamepad1.right_trigger*5800);
+                // while (gamepad1.left_bumper){
+                //    intake.setVelocity(gamepad1.left_trigger*2900);
+                //    }
+                //}
+                //while (gamepad1.left_bumper){
+                //   intake.setVelocity(gamepad1.left_trigger*2900);
+                //    while (gamepad1.right_bumper){
+                //       flywheel.setVelocity(gamepad1.right_trigger*5800);
+                //}}
+                //flywheel.setVelocity(0);
+                // --- Telemetry ---
+                //telemetry.addData("Intake Power", intake.getPower());
+                telemetry.addData("FR Encoders", FR.getCurrentPosition());
+                telemetry.addData("BL Encoders", BL.getCurrentPosition());
+                telemetry.addData("BR Encoders", BR.getCurrentPosition());
+                telemetry.addData("FL Encoders", FL.getCurrentPosition());
+                telemetry.addData("Forward Trigger", "%.2f", forwardPower);
+                telemetry.addData("Backward Trigger", "%.2f", backwardPower);
+                telemetry.addData("YSpeed (Fwd/Rev)", "%.2f", drive);
+                telemetry.addData("XSpeed (Strafe LX)", "%.2f", strafe);
+                telemetry.addData("Rotation (Rotate RX)", "%.2f", twist);
+                telemetry.addData("Denominator", "%.2f", denominator);
+                telemetry.addData("FR Velocity", "%.2f", FR.getVelocity());
+                telemetry.addData("BL Velocity", "%.2f", BL.getVelocity());
+                telemetry.addData("BR Velocity", "%.2f", BR.getVelocity());
+                telemetry.addData("FL Velocity", "%.2f", FL.getVelocity());
+                telemetry.addData("Flywheel RPM", flywheel.getVelocity());
+                telemetry.addData("Flywheel Power", flywheel.getPower());
+                telemetry.addData("Intake Power", intake.getPower());
+                telemetry.update();
+            }
+            // Stop all motors once the OpMode is no longer active
+            FR.setPower(0);
+            BL.setPower(0);
+            BR.setPower(0);
+            FL.setPower(0);
         }
-        // Stop all motors once the OpMode is no longer active
-        FR.setPower(0);
-        BL.setPower(0);
-        BR.setPower(0);
-        FL.setPower(0);
     }
 }
