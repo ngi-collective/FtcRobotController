@@ -63,7 +63,7 @@ public class MecanumProportionalControl extends LinearOpMode {
             //Outtake vars & Constants
             double OuttakeSpeed = 0;
             final double OTNULL = 0;
-            final double OTFARBACK = 6000;
+            final double OTFARBACK = 4500;
             final double OTCLOSEUP = 3000;
 
             // --- Read Gamepad Inputs ---
@@ -129,7 +129,7 @@ public class MecanumProportionalControl extends LinearOpMode {
             intake.setVelocity(600 * gamepad2.left_trigger);
 
             //FLYWHEEL SPEEDS Definition
-            if (gamepad2.yWasPressed()) {
+            if (gamepad2.yWasReleased()) {
                 if (OuttakeSpeed == OTNULL) {
                     OuttakeSpeed = OTCLOSEUP;
                     telemetry.update();
@@ -140,10 +140,10 @@ public class MecanumProportionalControl extends LinearOpMode {
                     OuttakeSpeed = OTNULL;
                     telemetry.update();
                 }
+            }
 
-                //flywheel.setVelocity(OuttakeSpeed);
-                flywheel.setVelocity(6000 * gamepad2.right_trigger);
-
+            flywheel.setVelocity(6000 * gamepad2.right_trigger);
+//          flywheel.setVelocity(OuttakeSpeed);
                 //if (gamepad2.left_bumper!=0) {
                 //  flywheel.setVelocity(-50);
                 //}
@@ -192,4 +192,3 @@ public class MecanumProportionalControl extends LinearOpMode {
             FL.setPower(0);
         }
     }
-}
