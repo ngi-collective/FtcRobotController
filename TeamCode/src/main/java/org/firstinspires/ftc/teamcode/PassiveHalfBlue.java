@@ -26,14 +26,14 @@ public class PassiveHalfBlue extends OpMode {
     public void buildPaths() {
         holdStart = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(34.697, 134.767), new Pose(34.697, 134.469))
+                        new BezierLine(new Pose(35, 135), new Pose(35, 135))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
                 .build();
 
         leaveLaunch = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(34.697, 134.469), new Pose(19.954, 101.113))
+                        new BezierLine(new Pose(35, 135), new Pose(20, 101))
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(270))
                 .build();

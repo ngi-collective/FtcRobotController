@@ -12,14 +12,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @Autonomous(name = "Example Auto", group = "Examples")
-public class PassiveHalfRed extends OpMode {
+public class PassiveFullRed extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
 
     private int pathState;
-    private final Pose startPose = new Pose(105, 136, Math.toRadians(180)); // Start Pose of our robot.
-    private final Pose scorePose = new Pose(85, 85, Math.toRadians(50)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    private final Pose startPose = new Pose(86, 8, Math.toRadians(90)); // Start Pose of our robot.
+    private final Pose scorePose = new Pose(105, 14, Math.toRadians(90)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
     private Path scorePreload;
     private PathChain holdStart, leaveLaunch;
 
