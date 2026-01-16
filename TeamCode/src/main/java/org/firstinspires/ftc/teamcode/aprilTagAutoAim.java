@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.opMode;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -21,13 +20,11 @@ import java.util.ArrayList;
  */
 public class aprilTagAutoAim{
     // Constants - ADJUST THESE FOR YOUR ROBOT
-    CameraName Camera = hardwareMap.get(CameraName.class,"Camera");
-    private static final double RPM_TOLERANCE = 5.0;
+    private static final double RPM_TOLERANCE = 50;
     // Create the AprilTag processor and assign it to a variable.
-    public static AprilTagProcessor myAprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
-    static ElapsedTime timer = new ElapsedTime();
     public static AprilTagDetection tagDetection;
-    VisionPortal myVisionPortal = VisionPortal.easyCreateWithDefaults(Camera,myAprilTagProcessor);
+
+    static ElapsedTime timer = new ElapsedTime();
 
     /**
      * Main function - Call this from your OpMode!
@@ -36,11 +33,14 @@ public class aprilTagAutoAim{
      * @param targetTagId Which AprilTag ID to shoot at
      * @param Camera
      * @param flywheel
+     * @param shootingservo
      * @return true if successful, false if tag not found
      */
-    public static boolean shootAtAprilTag(int targetTagId, WebcamName Camera, DcMotorEx flywheel) {
+    public static boolean shootAtAprilTag(int targetTagId, WebcamName Camera, DcMotorEx flywheel, AprilTagProcessor myAprilTagProcessor, VisionPortal myVisionPortal, Servo shootingservo, DcMotorEx intake) {
+        double shootingPosition = 0.25;
+        double closeposition = 0;
         // Find the AprilTag
-        AprilTagDetection tag = findTag(targetTagId, 5.0);
+        AprilTagDetection tag = findTag(targetTagId, 5.0,myAprilTagProcessor);
         if (tag == null) {
             opMode.telemetry.addLine("Tag not found!");
             opMode.telemetry.update();
@@ -60,25 +60,26 @@ public class aprilTagAutoAim{
         targetRPM = setFlywheelRPM(flywheel, Camera);
         // Set speed and wait for it.
         waitForSpeed(targetRPM, flywheel);
-
+        ElapsedTime stagetime = new ElapsedTime();
         // Shoot!
         opMode.telemetry.addLine("FIRING!");
         opMode.telemetry.update();
-
+        shootingservo.setPosition(shootingPosition);
+        while (5000 > stagetime.seconds()){
+            intake.setVelocity(300);
+        }
+        shootingservo.setPosition(closeposition);
         opMode.telemetry.addLine("Shot complete!");
         opMode.telemetry.update();
 
         return true;
     }
 
-    private static AprilTagDetection findTag(int targetId, double timeout) {
+    private static AprilTagDetection findTag(int targetId, double timeout,AprilTagProcessor myAprilTagProcessor) {
         while (timer.seconds() < timeout) {
             ArrayList<AprilTagDetection> detections = myAprilTagProcessor.getDetections();
             for (AprilTagDetection detection : detections) {
-                if (detection.id == 20) {
-                    return detection;
-                }
-                if (detection.id == 24) {
+                if (detection.id == targetId) {
                     return detection;
                 }
             }
@@ -89,8 +90,7 @@ public class aprilTagAutoAim{
     }
 
     private static double setFlywheelRPM(DcMotorEx flywheel, CameraName Camera) {
-// Create a VisionPortal, with the specified camera and AprilTag processor, and assign it to a variable.
-        double targetRPM = tagDetection.ftcPose.range;
+        double targetRPM = tagDetection.ftcPose.range * 17;
         flywheel.setVelocity(tagDetection.ftcPose.range);
         return targetRPM;
     }
