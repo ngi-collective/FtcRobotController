@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.components.FlyWheelShooter;
+
 import java.util.Arrays;
 
 @TeleOp(name = "Mecanum Proportional Control")
@@ -13,11 +15,14 @@ public class MecanumProportionalControl extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        // Initialize motors from hardware map
-        DcMotorEx flywheel = hardwareMap.get(DcMotorEx.class, "Flywheel");
-
-        DcMotorEx intake = hardwareMap.get(DcMotorEx.class, "Intake");
+        DcMotorEx intake = hardwareMap.get(DcMotorEx.class,"Intake");
+        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+
+        FlyWheelShooter shooter = new FlyWheelShooter(hardwareMap);
+
         // Front Left
         DcMotorEx FR = hardwareMap.get(DcMotorEx.class, "FR");
         // Front Right
@@ -44,8 +49,7 @@ public class MecanumProportionalControl extends LinearOpMode {
         for (DcMotor dcMotor : Arrays.asList(FR, BL, BR, FL)) {
             dcMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-        flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         // Set zero power behavior - FLOAT helps prevent coasting and makes control more precise
         for (DcMotor dcMotor : Arrays.asList(FR, BL, BR, FL)) {
             dcMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -58,8 +62,10 @@ public class MecanumProportionalControl extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
+        shooter.startIdle();
 
         while (opModeIsActive()) {
+
             //Outtake vars & Constants
             double OuttakeSpeed = 0;
             final double OTNULL = 0;
@@ -107,6 +113,12 @@ public class MecanumProportionalControl extends LinearOpMode {
             if (gamepad2.bWasPressed()) {
                 targetid = 24;
             }
+            if (gamepad2.rightBumperWasPressed()) {
+                shooter.shoot();
+            }
+            if (gamepad2.rightBumperWasReleased()) {
+                shooter.finishShooting();
+            }
             // --- Set Motor Powers ---
             FR.setPower(frontRightPower);
             BR.setPower(backRightPower);
@@ -126,23 +138,11 @@ public class MecanumProportionalControl extends LinearOpMode {
                 intake.setVelocity(-50);
                 telemetry.update();
             }*/
-            intake.setVelocity(600 * gamepad2.left_trigger);
-
-            //FLYWHEEL SPEEDS Definition
-            if (gamepad2.yWasReleased()) {
-                if (OuttakeSpeed == OTNULL) {
-                    OuttakeSpeed = OTCLOSEUP;
-                    telemetry.update();
-                } else if (OuttakeSpeed == OTCLOSEUP) {
-                    OuttakeSpeed = OTFARBACK;
-                    telemetry.update();
-                } else if (OuttakeSpeed == OTFARBACK) {
-                    OuttakeSpeed = OTNULL;
-                    telemetry.update();
-                }
+            if (gamepad2.left_trigger > 0) {
+                intake.setVelocity(600 * gamepad2.left_trigger);
             }
 
-            flywheel.setVelocity(6000 * gamepad2.right_trigger);
+
 //          flywheel.setVelocity(OuttakeSpeed);
                 //if (gamepad2.left_bumper!=0) {
                 //  flywheel.setVelocity(-50);
@@ -180,9 +180,8 @@ public class MecanumProportionalControl extends LinearOpMode {
                 telemetry.addData("BL Velocity", "%.2f", BL.getVelocity());
                 telemetry.addData("BR Velocity", "%.2f", BR.getVelocity());
                 telemetry.addData("FL Velocity", "%.2f", FL.getVelocity());
-                telemetry.addData("Flywheel RPM", flywheel.getVelocity());
-                telemetry.addData("Flywheel Power", flywheel.getPower());
                 telemetry.addData("Intake Power", intake.getPower());
+                shooter.updateTelemetry(telemetry);
                 telemetry.update();
             }
             // Stop all motors once the OpMode is no longer active

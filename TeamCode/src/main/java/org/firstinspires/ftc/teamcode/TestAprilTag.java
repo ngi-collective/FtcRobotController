@@ -34,11 +34,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.components.FlyWheelShooter;
 
-@TeleOp(name = "Flywheel Tuning With AprilTag")
-public class AprilTagShooterTuning extends LinearOpMode {
+@TeleOp(name = "Test AprilTag", group = "Test")
+public class TestAprilTag extends LinearOpMode {
     private FlyWheelShooter shooter;
 
-    int speed = 0;
     @Override
     public void runOpMode() {
         shooter = new FlyWheelShooter(hardwareMap);
@@ -46,25 +45,12 @@ public class AprilTagShooterTuning extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            shooter.setIntakeSpeed(700);
-
             while (opModeIsActive()) {
-                // Push telemetry to the Driver Station.
-
-                // Share the CPU.
-                sleep(20);
-                if (gamepad1.dpadRightWasPressed()){
-                    speed = speed + 50;
-                }
-                if (gamepad1.dpadLeftWasPressed()){
-                    speed = speed - 50;
-                }
-                shooter.setOuttakeSpeedPid(speed);
-                telemetry.addLine("Speed: "+ speed);
                 shooter.updateTelemetry(telemetry);
+                sleep(20);
             }
-
         }
     }
+
 
 }

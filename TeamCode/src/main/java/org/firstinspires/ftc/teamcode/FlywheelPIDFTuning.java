@@ -1,15 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
+@TeleOp(name = "Flywheel PIDF Tuning")
 public class FlywheelPIDFTuning extends OpMode {
     public DcMotorEx Flywheel;
-    public double highvelocity = 1500;
-    public double lowvelocity = 700;
+    public double highvelocity = 2100;
+    public double lowvelocity = 1600;
     double curTargetVelocity = highvelocity;
     double F = 0;
     double P = 0;
@@ -20,8 +22,10 @@ public class FlywheelPIDFTuning extends OpMode {
         Flywheel = hardwareMap.get(DcMotorEx.class,"Flywheel");
         Flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P, 8, 9, 5);
-        Flywheel.setPIDFCoefficients(DcMotor.RunMode. RUN_USING_ENCODER, pidfCoefficients);
+//        PIDCoefficients coefficients = new PIDCoefficients(P, .0, .0);
+        PIDFCoefficients coefficients = new PIDFCoefficients(P, .0, .0, F);
+        Flywheel.setPIDFCoefficients(DcMotor.RunMode. RUN_USING_ENCODER, coefficients);
+//        Flywheel.setPIDCoefficients(DcMotor.RunMode. RUN_USING_ENCODER, coefficients);
         telemetry.addLine( "Init complete");
     }
     public void loop(){
@@ -35,9 +39,6 @@ public class FlywheelPIDFTuning extends OpMode {
         }
         if (gamepad1.dpadLeftWasPressed()) {
             F -= stepSizes [stepIndex];
-        }
-        if (gamepad1.dpadRightWasPressed()) {
-            F+= stepSizes [stepIndex];
         }
         if (gamepad1.dpadUpWasPressed()) {
             P += stepSizes [stepIndex];
