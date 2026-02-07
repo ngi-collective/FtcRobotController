@@ -11,7 +11,7 @@ Motif PPG: 23
 Red Goal: 24
 
 So basically, you lineup your robot in front of the motif april tag. It scans said April Tag and then gives you a value back. You then have three if/then statements where you pretty much
-say "if the numeric value is 21, then run the GPP pathbuilder" and so on. Right now, though, the code just has movement. So whenever you get your shooting and intake mechanisms figured out, just add that code in the
+say "if the numeric value is 21, then run the GPP pathbuilder" and so on. Right now, though, the code just has movement. So whenever you get your shooting and Intake mechanisms figured out, just add that code in the
 designated function and call the function in whichever part of the pathbuilder it is needed. I hope this helps!
 */
 
@@ -100,9 +100,9 @@ public class AprilTagPatternAuto extends LinearOpMode {
         }
     }
 
-    // a place to put your intake and shooting functions
+    // a place to put your Intake and shooting functions
     public void intakeArtifacts() {
-        // Put your intake logic/functions here
+        // Put your Intake logic/functions here
     }
 
     public void shootArtifacts() {

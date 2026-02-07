@@ -12,7 +12,6 @@ import java.util.Arrays;
 
 @TeleOp(name = "Mecanum Proportional Control")
 public class MecanumProportionalControl extends LinearOpMode {
-
     @Override
     public void runOpMode() {
         DcMotorEx intake = hardwareMap.get(DcMotorEx.class,"Intake");
@@ -88,7 +87,7 @@ public class MecanumProportionalControl extends LinearOpMode {
             // Right stick X is -1.0 (left/counter-clockwise) to 1.0 (right/clockwise).
             // Set to negative because left and right was swapped.
             double twist = (gamepad1.right_stick_x);
-            twist *= 2.0;
+            twist *= 1;
 
             // --- Mecanum Drive Kinematics ---
             // These formulas allow for combining ySpeed, xSpeed, and rotationSpeed.
@@ -97,8 +96,9 @@ public class MecanumProportionalControl extends LinearOpMode {
             // This ensures all the powers maintain the same ratio, but only when
             // at least one is out of the range [-1, 1].
             double denominator = Math.max(Math.abs(drive) + Math.abs(strafe) + Math.abs(twist), 1);
-            denominator *= 2;
+            denominator *= 1.75;
 //            double denominator = 1;
+
 
 
             double frontLeftPower = (drive + strafe + twist) / denominator;
@@ -106,7 +106,7 @@ public class MecanumProportionalControl extends LinearOpMode {
             double frontRightPower = (drive - strafe - twist) / denominator;
             double backRightPower = (drive + strafe - twist) / (denominator);
             targetid = 20;
-            //intake.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,P = 0.8, D = 0, I = 0, F = 0.8);
+            //Intake.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,P = 0.8, D = 0, I = 0, F = 0.8);
             if (gamepad2.xWasPressed()) {
                 targetid = 20;
             }
@@ -114,7 +114,8 @@ public class MecanumProportionalControl extends LinearOpMode {
                 targetid = 24;
             }
             if (gamepad2.rightBumperWasPressed()) {
-                shooter.shoot();
+
+                shooter.shoot(this);
             }
             if (gamepad2.rightBumperWasReleased()) {
                 shooter.finishShooting();
@@ -127,20 +128,25 @@ public class MecanumProportionalControl extends LinearOpMode {
 
             // -- ROBOT DIGESTIVE SYSTEM CONTROLS --
             /*if (gamepad2.dpad_up) {
-                intake.setVelocity(500);
+                Intake.setVelocity(500);
                 telemetry.update();
             }
             if (gamepad2.dpad_down){
-                intake.setVelocity(0);
+                Intake.setVelocity(0);
                 telemetry.update();
             }
             if (gamepad2.dpad_left){
-                intake.setVelocity(-50);
+                Intake.setVelocity(-50);
                 telemetry.update();
             }*/
-            if (gamepad2.left_trigger > 0) {
-                intake.setVelocity(600 * gamepad2.left_trigger);
+            if (gamepad2.aWasPressed()) {
+                intake.setVelocity(500);
             }
+            if (gamepad2.aWasReleased()){
+                intake.setVelocity(0);
+            }
+
+
 
 
 //          flywheel.setVelocity(OuttakeSpeed);
@@ -155,17 +161,17 @@ public class MecanumProportionalControl extends LinearOpMode {
                 //while (gamepad1.right_bumper){
                 //  flywheel.setVelocity(gamepad1.right_trigger*5800);
                 // while (gamepad1.left_bumper){
-                //    intake.setVelocity(gamepad1.left_trigger*2900);
+                //    Intake.setVelocity(gamepad1.left_trigger*2900);
                 //    }
                 //}
                 //while (gamepad1.left_bumper){
-                //   intake.setVelocity(gamepad1.left_trigger*2900);
+                //   Intake.setVelocity(gamepad1.left_trigger*2900);
                 //    while (gamepad1.right_bumper){
                 //       flywheel.setVelocity(gamepad1.right_trigger*5800);
                 //}}
                 //flywheel.setVelocity(0);
                 // --- Telemetry ---
-                //telemetry.addData("Intake Power", intake.getPower());
+                //telemetry.addData("Intake Power", Intake.getPower());
                 telemetry.addData("FR Encoders", FR.getCurrentPosition());
                 telemetry.addData("BL Encoders", BL.getCurrentPosition());
                 telemetry.addData("BR Encoders", BR.getCurrentPosition());

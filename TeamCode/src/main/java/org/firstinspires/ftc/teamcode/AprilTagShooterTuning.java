@@ -46,7 +46,7 @@ public class AprilTagShooterTuning extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            shooter.setIntakeSpeed(700);
+            shooter.setIntakeSpeed(400);
 
             while (opModeIsActive()) {
                 // Push telemetry to the Driver Station.

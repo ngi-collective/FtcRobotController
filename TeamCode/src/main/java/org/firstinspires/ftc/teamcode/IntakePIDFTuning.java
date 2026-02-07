@@ -1,25 +1,27 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+@TeleOp(name = "Intake PIDF")
 
 public class IntakePIDFTuning extends OpMode {
-    public DcMotorEx intake;
-    public double velocity = 700;
+    public DcMotorEx Intake;
+    public double velocity = 600;
     double F = 0;
     double P = 0;
     double[] stepSizes = {10.0, 1.0, 0.1, 0.01, 0.001, 0.0001};
     int stepIndex = 1;
 
     public void init(){
-        intake = hardwareMap.get(DcMotorEx.class,"intake");
-        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intake.setDirection(DcMotorSimple.Direction.REVERSE);
+        Intake = hardwareMap.get(DcMotorEx.class,"Intake");
+        Intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Intake.setDirection(DcMotorSimple.Direction.REVERSE);
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P, 8, 9, 5);
-        intake.setPIDFCoefficients(DcMotor.RunMode. RUN_USING_ENCODER, pidfCoefficients);
+        Intake.setPIDFCoefficients(DcMotor.RunMode. RUN_USING_ENCODER, pidfCoefficients);
         telemetry.addLine( "Init complete");
     }
     public void loop(){
@@ -40,12 +42,12 @@ public class IntakePIDFTuning extends OpMode {
         }
         // set new PIDF coefficients
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients (P, 0,  0, F);
-        intake.setPIDFCoefficients (DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+        Intake.setPIDFCoefficients (DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         // set velocity
-        intake.setVelocity (velocity);
-        double error = velocity - intake.getVelocity();
+        Intake.setVelocity(velocity);
+        double error = velocity - Intake.getVelocity();
         telemetry.addData( "Target Velocity", velocity);
-        telemetry.addData("Current Velocity", "%.2f", intake.getVelocity());
+        telemetry.addData("Current Velocity", "%.2f", Intake.getVelocity());
         telemetry.addData( "Error",  "%.2f", error);
         telemetry.addLine( ". -----------------------------------------------");
         telemetry.addData( "Tuning P", "%.4f (D-Pad U/D)", P);

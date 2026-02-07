@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.components;
 
 import static android.os.SystemClock.sleep;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -50,10 +51,12 @@ import java.util.List;
 
 public class FlyWheelShooter {
     private final double INTAKE_SPEED = 600;
-    private final double SHOOTING_INTAKE_SPEED = 900;
+    private final double SHOOTING_INTAKE_SPEED = 700;   //rpm speed
     private final double IDLE_RPM = 1000;
     private final double MAX_RPM = 2200;
-    private final double MIN_RPM = 1600;
+    private final double MIN_RPM = 1700;
+
+    //Positions of Servos (when opening & closing)
     private final double SERVO1_OPEN_POS = .80;
     private final double SERVO1_CLOSE_POS = .65;
     private final double SERVO2_OPEN_POS = .70;
@@ -61,7 +64,7 @@ public class FlyWheelShooter {
     private double MAX_EXPECTED_DISTANCE_IN = 119;
     private double MIN_EXPECTED_DISTANCE_IN = 38;
 
-
+// Parts Defined
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
@@ -98,11 +101,12 @@ public class FlyWheelShooter {
 
     }
 
+    //Resets Flywheel & Intake to Lower Speed
     public void startIdle() {
         flywheel.setVelocity(IDLE_RPM);
         intake.setVelocity(0);
     }
-
+// Starts Intake, not to be confused with setIntakeSpeed()
     public void startIntake() {
         setIntakeSpeed(INTAKE_SPEED);
     }
@@ -111,22 +115,24 @@ public class FlyWheelShooter {
         setIntakeSpeed(0);
     }
 
+    //rpm of outtake
     public void setOuttakeSpeedRaw(double speed) {
         flywheel.setVelocity(speed);
     }
 
     public void setOuttakeSpeedPid(double speed) {
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(172.3, 0, 0, 10.4);
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(180, 0, 0, 10.4);
         flywheel.setPIDFCoefficients(DcMotor.RunMode. RUN_USING_ENCODER, pidfCoefficients);
         flywheel.setVelocity(speed);
 
     }
 
+    //changes Intake speed (not startIntake() )
     public void setIntakeSpeed(double speed) {
         intake.setVelocity(speed);
     }
 
-    public void shoot() {
+    public void shoot(LinearOpMode opmode) {
         if (isShooting) {
             return;
         }
@@ -144,13 +150,29 @@ public class FlyWheelShooter {
         // Spin up motor
         setOuttakeSpeedPid(desiredRpm);
 
+
         // WAIT FOR RPM TO HIT DESIRED RPM
-        sleep(250);
+       /* int flywheelTimer = 0;
+        while ((flywheel.getVelocity() <= desiredRpm) && (flywheelTimer <= 200)){
+            flywheelTimer = flywheelTimer + 1;
+            sleep(10);
+            updateTelemetry(opmode.telemetry);
+            if (!opmode.opModeIsActive()){
+                return;
+            }
+        }
         openServos();
-        sleep(250);
         setIntakeSpeed(SHOOTING_INTAKE_SPEED);
+*/
+        sleep(1500);
+        setIntakeSpeed(SHOOTING_INTAKE_SPEED);
+        sleep(500);
+        openServos();
+        updateTelemetry(opmode.telemetry);
+
     }
 
+    //uses apriltag to get distance
     private double getDetectedRange() {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         for (AprilTagDetection detection : currentDetections) {
@@ -175,7 +197,7 @@ public class FlyWheelShooter {
         isShooting = false;
         startIdle();
         closeServos();
-        // turn off intake
+        // turn off Intake
     }
 
     private void initAprilTag() {
