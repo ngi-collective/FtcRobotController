@@ -15,6 +15,8 @@ public class MecanumProportionalControl extends LinearOpMode {
     @Override
     public void runOpMode() {
         DcMotorEx intake = hardwareMap.get(DcMotorEx.class,"Intake");
+        boolean IntakeOn = false;
+        final int INTAKESPD = 500;
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -65,12 +67,6 @@ public class MecanumProportionalControl extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            //Outtake vars & Constants
-            double OuttakeSpeed = 0;
-            final double OTNULL = 0;
-            final double OTFARBACK = 4500;
-            final double OTCLOSEUP = 3000;
-
             // --- Read Gamepad Inputs ---
             // Forward/Backward from triggers
             double forwardPower = gamepad1.left_trigger; // 0.0 to 1.0
@@ -96,7 +92,7 @@ public class MecanumProportionalControl extends LinearOpMode {
             // This ensures all the powers maintain the same ratio, but only when
             // at least one is out of the range [-1, 1].
             double denominator = Math.max(Math.abs(drive) + Math.abs(strafe) + Math.abs(twist), 1);
-            denominator *= 1.75;
+            denominator *= 1;
 //            double denominator = 1;
 
 
@@ -107,12 +103,6 @@ public class MecanumProportionalControl extends LinearOpMode {
             double backRightPower = (drive + strafe - twist) / (denominator);
             targetid = 20;
             //Intake.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,P = 0.8, D = 0, I = 0, F = 0.8);
-            if (gamepad2.xWasPressed()) {
-                targetid = 20;
-            }
-            if (gamepad2.bWasPressed()) {
-                targetid = 24;
-            }
             if (gamepad2.rightBumperWasPressed()) {
 
                 shooter.shoot(this);
@@ -139,12 +129,38 @@ public class MecanumProportionalControl extends LinearOpMode {
                 Intake.setVelocity(-50);
                 telemetry.update();
             }*/
+
+            //toggle intake
+//            if (gamepad2.aWasReleased()){
+//                if (IntakeOn == true){
+//                    IntakeOn = false;
+//                }
+//                if (IntakeOn == false){
+//                    IntakeOn = true;
+//                }
+//            }
+//            int IntakeCurVel = 0;
+//            if (gamepad2.aWasPressed()){
+//                IntakeCurVel = INTAKESPD;
+//            } else if (gamepad2.bWasPressed()){
+//                IntakeCurVel = -(INTAKESPD/2);
+//            if (gamepad2.aWasReleased()){
+//                IntakeCurVel = 0;
+//            }
             if (gamepad2.aWasPressed()) {
                 intake.setVelocity(500);
             }
+            if (gamepad2.bWasPressed()){
+                intake.setVelocity(-500);
+            }
+
             if (gamepad2.aWasReleased()){
                 intake.setVelocity(0);
             }
+            if (gamepad2.bWasReleased()){
+                intake.setVelocity(0);
+            }
+
 
 
 

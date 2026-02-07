@@ -53,7 +53,7 @@ public class FlyWheelShooter {
     private final double INTAKE_SPEED = 600;
     private final double SHOOTING_INTAKE_SPEED = 700;   //rpm speed
     private final double IDLE_RPM = 1000;
-    private final double MAX_RPM = 2200;
+    private final double MAX_RPM = 2250;
     private final double MIN_RPM = 1700;
 
     //Positions of Servos (when opening & closing)
@@ -62,7 +62,7 @@ public class FlyWheelShooter {
     private final double SERVO2_OPEN_POS = .70;
     private final double SERVO2_CLOSE_POS = .55;
     private double MAX_EXPECTED_DISTANCE_IN = 119;
-    private double MIN_EXPECTED_DISTANCE_IN = 38;
+    private double MIN_EXPECTED_DISTANCE_IN = 42;
 
 // Parts Defined
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
