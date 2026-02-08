@@ -72,7 +72,7 @@ public class MecanumProportionalControl extends LinearOpMode {
             double forwardPower = gamepad1.left_trigger; // 0.0 to 1.0
             double backwardPower = gamepad1.right_trigger; // 0.0 to 1.0
             // Net forward/backward. Positive is forward, negative is backward.
-            double drive = (forwardPower - backwardPower);
+            double drive = (gamepad1.left_stick_y);
 
             // Strafing from Left Joystick X-axis
             // Left stick X is -1.0 (left) to 1.0 (right).
@@ -103,11 +103,12 @@ public class MecanumProportionalControl extends LinearOpMode {
             double backRightPower = (drive + strafe - twist) / (denominator);
             targetid = 20;
             //Intake.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,P = 0.8, D = 0, I = 0, F = 0.8);
-            if (gamepad2.rightBumperWasPressed()) {
+            shooter.getShootSpeed();
+            if (gamepad1.rightBumperWasPressed()) {
 
                 shooter.shoot(this);
             }
-            if (gamepad2.rightBumperWasReleased()) {
+            if (gamepad1.rightBumperWasReleased()) {
                 shooter.finishShooting();
             }
             // --- Set Motor Powers ---
@@ -147,19 +148,21 @@ public class MecanumProportionalControl extends LinearOpMode {
 //            if (gamepad2.aWasReleased()){
 //                IntakeCurVel = 0;
 //            }
-            if (gamepad2.aWasPressed()) {
-                intake.setVelocity(500);
-            }
-            if (gamepad2.bWasPressed()){
-                intake.setVelocity(-500);
-            }
 
-            if (gamepad2.aWasReleased()){
-                intake.setVelocity(0);
-            }
-            if (gamepad2.bWasReleased()){
-                intake.setVelocity(0);
-            }
+//            if (gamepad1.aWasPressed()) {
+//                intake.setVelocity(500);
+//            }
+//            if (gamepad1.bWasPressed()){
+//                intake.setVelocity(-500);
+//            }
+//
+//            if (gamepad1.aWasReleased()){
+//                intake.setVelocity(0);
+//            }
+//            if (gamepad1.bWasReleased()){
+//                intake.setVelocity(0);
+//            }
+            intake.setVelocity(500);
 
 
 

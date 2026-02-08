@@ -29,8 +29,6 @@
 
 package org.firstinspires.ftc.teamcode.components;
 
-import static android.os.SystemClock.sleep;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -52,7 +50,7 @@ import java.util.List;
 public class FlyWheelShooter {
     private final double INTAKE_SPEED = 600;
     private final double SHOOTING_INTAKE_SPEED = 700;   //rpm speed
-    private final double IDLE_RPM = 1000;
+    private final double IDLE_RPM = 1700;
     private final double MAX_RPM = 2250;
     private final double MIN_RPM = 1700;
 
@@ -61,8 +59,8 @@ public class FlyWheelShooter {
     private final double SERVO1_CLOSE_POS = .65;
     private final double SERVO2_OPEN_POS = .70;
     private final double SERVO2_CLOSE_POS = .55;
-    private double MAX_EXPECTED_DISTANCE_IN = 119;
-    private double MIN_EXPECTED_DISTANCE_IN = 42;
+    private double MAX_EXPECTED_DISTANCE_IN = 122;
+    private double MIN_EXPECTED_DISTANCE_IN = 37.5;
 
 // Parts Defined
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -132,12 +130,7 @@ public class FlyWheelShooter {
         intake.setVelocity(speed);
     }
 
-    public void shoot(LinearOpMode opmode) {
-        if (isShooting) {
-            return;
-        }
-        isShooting = true;
-
+    public void getShootSpeed(){
         // Detect distance
         double distance = getDetectedRange();
         double normalized_distance = distance - MIN_EXPECTED_DISTANCE_IN;
@@ -149,24 +142,41 @@ public class FlyWheelShooter {
 
         // Spin up motor
         setOuttakeSpeedPid(desiredRpm);
+    }
 
-
-        // WAIT FOR RPM TO HIT DESIRED RPM
-       /* int flywheelTimer = 0;
-        while ((flywheel.getVelocity() <= desiredRpm) && (flywheelTimer <= 200)){
-            flywheelTimer = flywheelTimer + 1;
-            sleep(10);
-            updateTelemetry(opmode.telemetry);
-            if (!opmode.opModeIsActive()){
-                return;
-            }
+    public void shoot(LinearOpMode opmode) {
+        if (isShooting) {
+            return;
         }
-        openServos();
+        isShooting = true;
+
+//        // Detect distance
+//        double distance = getDetectedRange();
+//        double normalized_distance = distance - MIN_EXPECTED_DISTANCE_IN;
+//        double range = MAX_EXPECTED_DISTANCE_IN - MIN_EXPECTED_DISTANCE_IN;
+//        double pct = normalized_distance / range;
+//        double rpmRange = MAX_RPM - MIN_RPM;
+//        double rpmAdd = rpmRange * pct;
+//        double desiredRpm = MIN_RPM + rpmAdd;
+//
+//        // Spin up motor
+//        setOuttakeSpeedPid(desiredRpm);
+
+
+//        // WAIT FOR FLYWHEEL TO HIT DESIRED RPM
+//        int flywheelTimer = 0;
+//        while ((flywheel.getVelocity() <= desiredRpm) && (flywheelTimer <= 200)){
+//            flywheelTimer = flywheelTimer + 1;
+//            sleep(10);
+//            updateTelemetry(opmode.telemetry);
+//            if (!opmode.opModeIsActive()){
+//                return;
+//            }
+//        }
+//        openServos();
+
         setIntakeSpeed(SHOOTING_INTAKE_SPEED);
-*/
-        sleep(1500);
         setIntakeSpeed(SHOOTING_INTAKE_SPEED);
-        sleep(500);
         openServos();
         updateTelemetry(opmode.telemetry);
 
