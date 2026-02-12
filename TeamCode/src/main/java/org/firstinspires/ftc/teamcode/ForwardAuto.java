@@ -16,9 +16,7 @@ public abstract class ForwardAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        //ARBITRARY VALUE
-        //calc by moving forward for 1 sec, divide distance by 1000.
-        final double MSTOINCHES = 0.3;
+        final double power = 0.25;
 
         //flywheel
         FlyWheelShooter shooter = new FlyWheelShooter(hardwareMap);
@@ -55,43 +53,35 @@ public abstract class ForwardAuto extends LinearOpMode {
             dcMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
 
-        void moveForward(int distance, double power) {
-            int msMoved = (int) ((distance*MSTOINCHES)*(power));
-
-            FR.setPower(-power);
-            BR.setPower(-power);
-            BL.setPower(-power);
-            FL.setPower(-power);
-            sleep(msMoved);
-            FR.setPower(0);
-            BR.setPower(0);
-            BL.setPower(0);
-            FL.setPower(0);
-
-            return;
-        }
-        void moveTurn(int degrees, double power){
-            //negative degrees means left turn
-
-            //value of degrees per millisecond
-            // we can calc this value by turning for one second, and measure the degrees turned
-            int MsinDeg = (int) (MSTOINCHES)*degrees //arbitrary, fix
-
-            FR.setPower(power);
-            BR.setPower(power);
-            BL.setPower(-power);
-            FL.setPower(-power);
-            sleep(MsinDeg);
-            FR.setPower(0);
-            BR.setPower(0);
-            BL.setPower(0);
-            FL.setPower(0);
-        }
 
         //ActualMoveForward Script
-        moveForward(20,0.25);
+
+        //straight
+        FR.setPower(-power);
+        BR.setPower(-power);
+        BL.setPower(-power);
+        FL.setPower(-power);
+        sleep(1000);
+        FR.setPower(0);
+        BR.setPower(0);
+        BL.setPower(0);
+        FL.setPower(0);
         sleep(350);
-        moveTurn(-90,0.25);
+
+        //turn (left)
+        FR.setPower(-power);
+        BR.setPower(-power);
+        BL.setPower(power);
+        FL.setPower(power);
+        sleep(200);
+        FR.setPower(0);
+        BR.setPower(0);
+        BL.setPower(0);
+        FL.setPower(0);
+
+        shooter.getShootSpeed();
+        sleep(1000);
+        shooter.shoot(this);
     }
 
 }
