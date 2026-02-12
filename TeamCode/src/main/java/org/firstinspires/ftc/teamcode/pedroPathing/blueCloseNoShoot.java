@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 
-@Autonomous(name = "Pedro Pathing Autonomous", group = "Autonomous")
+@Autonomous(name = "Pedro Pathing Autonomous No Shoot", group = "Autonomous")
 @Configurable // Panels
 public class blueCloseNoShoot extends OpMode {
     private TelemetryManager panelsTelemetry; // Panels Telemetry instance

@@ -20,8 +20,6 @@ public class MecanumProportionalControl extends LinearOpMode {
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
-
-
         FlyWheelShooter shooter = new FlyWheelShooter(hardwareMap);
 
         // Front Left

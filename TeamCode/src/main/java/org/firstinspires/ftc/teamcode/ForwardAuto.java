@@ -12,13 +12,12 @@ import java.util.Arrays;
 
 
 @Autonomous(name = "NothingAuto")
-public abstract class ForwardAuto extends LinearOpMode {
-
+public class ForwardAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
-        final double power = 0.25;
+        double speed = -0.25;
 
-        //flywheel
+        //flywheel init
         FlyWheelShooter shooter = new FlyWheelShooter(hardwareMap);
 
         // Front Left
@@ -50,38 +49,28 @@ public abstract class ForwardAuto extends LinearOpMode {
 
         // Set zero power behavior - FLOAT helps prevent coasting and makes control more precise
         for (DcMotor dcMotor : Arrays.asList(FR, BL, BR, FL)) {
-            dcMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            dcMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
 
-        //ActualMoveForward Script
-
-        //straight
-        FR.setPower(-power);
-        BR.setPower(-power);
-        BL.setPower(-power);
-        FL.setPower(-power);
-        sleep(1000);
-        FR.setPower(0);
-        BR.setPower(0);
-        BL.setPower(0);
-        FL.setPower(0);
-        sleep(350);
-
-        //turn (left)
-        FR.setPower(-power);
-        BR.setPower(-power);
-        BL.setPower(power);
-        FL.setPower(power);
+        //ts is a turn buddo
+        FR.setPower(speed);
+        BR.setPower(speed);
+        BL.setPower(-speed);
+        FL.setPower(-speed);
         sleep(200);
+        shooter.getShootSpeed();
+        sleep(1500);
+        shooter.shoot(this);
+        sleep(750);
+        FR.setPower(speed);
+        BR.setPower(speed);
+        BL.setPower(speed);
+        FL.setPower(speed);
+        sleep(500);
         FR.setPower(0);
         BR.setPower(0);
         BL.setPower(0);
         FL.setPower(0);
-
-        shooter.getShootSpeed();
-        sleep(1000);
-        shooter.shoot(this);
     }
-
 }

@@ -28,16 +28,15 @@ public class Constants {
             .rightRearMotorName("BR")
             .leftRearMotorName("BL")
             .leftFrontMotorName("FL")
-            .leftFrontEncoderDirection(Encoder.REVERSE)
-            .leftRearEncoderDirection(Encoder.REVERSE)
+            .leftFrontEncoderDirection(Encoder.FORWARD)
+            .leftRearEncoderDirection(Encoder.FORWARD)
             .rightFrontEncoderDirection(Encoder.FORWARD)
             .rightRearEncoderDirection(Encoder.FORWARD)
-            .robotWidth(18)
-            .robotLength(17)
-            .strafeTicksToInches(0.5)
-            .turnTicksToInches(0.5)
-            .forwardTicksToInches(0.4642057861318711);
-
+            .robotWidth(15)
+            .robotLength(16)
+            .strafeTicksToInches(-0.70)
+            .turnTicksToInches(0.05)
+            .forwardTicksToInches(2);
 
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
