@@ -18,11 +18,11 @@ import java.util.Arrays;
 public class MecanumIMUControlXY extends LinearOpMode {
     @Override
     public void runOpMode() {
-        // --- INTAKE SETUP ---
+        // --- INTAKE SETUP (REVERTED TO OLD VERSION) ---
         DcMotorEx intake = hardwareMap.get(DcMotorEx.class,"Intake");
-        // CHANGED: Using RUN_WITHOUT_ENCODER for the intake to stop PID stuttering
-        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         FlyWheelShooter shooter = new FlyWheelShooter(hardwareMap);
 
@@ -54,7 +54,7 @@ public class MecanumIMUControlXY extends LinearOpMode {
             dcMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
-        // STUTTER FIX: Using FLOAT behavior
+        // Keep FLOAT behavior for smoothness
         for (DcMotor dcMotor : Arrays.asList(FR, BL, BR, FL)) {
             dcMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
@@ -91,11 +91,12 @@ public class MecanumIMUControlXY extends LinearOpMode {
 
             // --- SHOOTER & SERVO FEEDER ---
             shooter.getShootSpeed();
-            if (gamepad1.right_bumper) {
+            if (gamepad1.rightBumperWasPressed()) {
                 shooter.shoot(this);
                 ShootingServo1.setPosition(1.0);
                 ShootingServo2.setPosition(0.0);
-            } else {
+            }
+            if (gamepad1.rightBumperWasReleased()) {
                 shooter.finishShooting();
                 ShootingServo1.setPosition(0.5);
                 ShootingServo2.setPosition(0.5);
@@ -107,11 +108,11 @@ public class MecanumIMUControlXY extends LinearOpMode {
             BL.setPower(backLeftPower);
             FL.setPower(frontLeftPower);
 
-            // --- FIXED INTAKE/OUTTAKE CONTROLS (Using Power instead of Velocity) ---
+            // --- INTAKE/OUTTAKE CONTROLS (REVERTED) ---
             if (gamepad1.a) {
-                intake.setPower(0.8); // 80% power in
+                intake.setPower(-0.45);
             } else if (gamepad1.b) {
-                intake.setPower(-0.8); // 80% power out
+                intake.setPower(0.45);
             } else {
                 intake.setPower(0);
             }
@@ -122,6 +123,6 @@ public class MecanumIMUControlXY extends LinearOpMode {
         }
 
         FR.setPower(0); BL.setPower(0); BR.setPower(0); FL.setPower(0);
-        intake.setPower(0);
+        intake.setVelocity(0);
     }
 }

@@ -154,9 +154,9 @@ public class SilkySmooth extends LinearOpMode {
 
             // Intake Power logic - Remains full speed
             if (gamepad1.a) {
-                intake.setVelocity(500);
+                intake.setVelocity(700);
             } else if (gamepad1.b) {
-                intake.setVelocity(-500);
+                intake.setVelocity(-700);
             } else {
                 intake.setVelocity(0);
             }

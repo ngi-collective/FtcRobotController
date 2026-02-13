@@ -14,8 +14,10 @@ import java.util.Arrays;
 @Autonomous(name = "NothingAuto")
 public class ForwardAuto extends LinearOpMode {
     @Override
-    public void runOpMode() {
-        double speed = -0.25;
+    public void runOpMode(){waitForStart();}
+
+    public void waitForStart() {
+        double speed = -0.5;
 
         //flywheel init
         FlyWheelShooter shooter = new FlyWheelShooter(hardwareMap);
@@ -59,6 +61,10 @@ public class ForwardAuto extends LinearOpMode {
         BL.setPower(-speed);
         FL.setPower(-speed);
         sleep(200);
+        FR.setPower(0);
+        BR.setPower(0);
+        BL.setPower(0);
+        FL.setPower(0);
         shooter.getShootSpeed();
         sleep(1500);
         shooter.shoot(this);
